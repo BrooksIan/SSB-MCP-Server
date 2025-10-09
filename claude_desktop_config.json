@@ -18,7 +18,6 @@
         "run",
         "ssb-mcp-server"
       ],
-      "cwd": "/Users/ibrooks/Documents/GitHub/SSB-MCP-Server",
       "env": {
         "SSB_API_BASE": "http://localhost:18121",
         "SSB_USER": "admin",
