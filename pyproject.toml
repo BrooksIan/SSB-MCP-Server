@@ -21,6 +21,12 @@ dependencies = [
 [project.scripts]
 run-server = "ssb_mcp_server.server:main"
 
+[project.optional-dependencies]
+mcp = []
+
+[tool.mcp]
+servers = { ssb-mcp-server = "ssb_mcp_server.server:main" }
+
 [tool.uv]
 dev-dependencies = [
   "pytest>=8.2.0",

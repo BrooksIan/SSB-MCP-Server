@@ -1,26 +1,5 @@
 {
   "mcpServers": {
-    "brave-search": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-brave-search"
-      ],
-      "env": {
-        "BRAVE_API_KEY": "YOUR_API_KEY_HERE"
-      }
-    },
-    "slack": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-slack"
-      ],
-      "env": {
-        "SLACK_BOT_TOKEN": "xoxb-4975536738788-8127830210564-HNU1XdQLultT5lWb9EgWyqHg",
-        "SLACK_TEAM_ID": "T04UPFSMQP6"
-      }
-    },
     "apache-flink": {
       "command": "npx",
       "args": [
@@ -33,8 +12,12 @@
       }
     },
     "ssb-mcp-server": {
-      "command": "/Users/ibrooks/Documents/GitHub/SSB-MCP-Server/run_mcp_server.sh",
-      "args": [],
+      "command": "uvx",
+      "args": [
+        "mcp",
+        "run",
+        "ssb-mcp-server"
+      ],
       "cwd": "/Users/ibrooks/Documents/GitHub/SSB-MCP-Server"
     }
   }
