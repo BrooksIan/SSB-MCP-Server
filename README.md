@@ -278,33 +278,8 @@ The SSB MCP Server provides comprehensive access to SQL Stream Builder through C
 ![SSB Home Dashboard](images/SSB_Home_Branded.jpg)
 *The main SSB interface showing the home dashboard with available streams and jobs, featuring the SSB MCP Server integration with prominent branding.*
 
-
 **Standard Brand Box Versions:**
 - ![SSB Home Branded](images/SSB_Home_branded.png) - Top positioned with yellow text
-
-### Listing Available Jobs
-![Claude List Jobs](images/ClaudeListJobs.png)
-*Claude can list all running SSB jobs, showing their status, creation time, and details.*
-
-### Exploring Available Tables
-![Claude Show Tables](images/ClaudeShowTables.png)
-*Claude can show all available tables in the SSB environment, including both built-in and custom tables.*
-
-### Getting Table Information
-![Claude Get Table Info](images/ClaudeGetTableInfo.png)
-*Claude can provide detailed information about specific tables, including their schema and configuration.*
-
-### Creating New Jobs
-![Claude Created Job](images/ClaudeCreatedJob.png)
-*Claude can create new SSB jobs by executing SQL queries, with full job management capabilities.*
-
-### Retrieving Sample Data
-![Claude Job Sample](images/ClaudeJobSample.png)
-*Claude can retrieve real-time sample data from running jobs, showing actual streaming data.*
-
-### Creating Virtual Tables
-![Claude Created Table](images/ClaudeCreatedTable.png)
-*Claude can create new virtual tables connected to Kafka topics, with proper schema and connector configuration.*
 
 ## Example Usage
 
@@ -318,10 +293,16 @@ Once configured, you can ask Claude questions like:
 - "List all Kafka topics"
 - "How is the cluster health?"
 
+![Claude Show Tables](images/ClaudeShowTables.png)
+*Claude can show all available tables in the SSB environment, including both built-in and custom tables.*
+
 ### Query Execution & Data Access
 - "Execute this query: SELECT * FROM NVDA"
 - "Create a job with sample all messages: SELECT * FROM NVDA"
 - "Show me the status of job 1234"
+
+![Claude List Jobs](images/ClaudeListJobs.png)
+*Claude can list all running SSB jobs, showing their status, creation time, and details.*
 - "Get sample data from job 1234"
 - "List all jobs with their sample information"
 - "Show me the latest data from the ReadNVDA job"
@@ -332,6 +313,9 @@ Once configured, you can ask Claude questions like:
 - "Restart job 1234 with custom sampling (500ms interval)"
 - "Configure sampling for job 1234 to sample all messages"
 
+![Claude Created Job](images/ClaudeCreatedJob.png)
+*Claude can create new SSB jobs by executing SQL queries, with full job management capabilities.*
+
 ### Stream Management
 - "Create a new stream called 'sales_analysis' with this SQL: SELECT * FROM sales WHERE amount > 1000"
 - "Show me the details of the 'user_events' stream"
@@ -341,6 +325,9 @@ Once configured, you can ask Claude questions like:
 - "Create a local Kafka table called 'user_events' from topic 'user-events'"
 - "Register a Kafka table in the Flink catalog to make it queryable"
 - "Create a local Kafka table with JSON format"
+
+![Claude Created Table](images/ClaudeCreatedTable.png)
+*Claude can create new virtual tables connected to Kafka topics, with proper schema and connector configuration.*
 - "Validate if 'local-kafka' is a valid connector type"
 - "Create a virtual table for real-time data streaming"
 
@@ -364,6 +351,9 @@ Once configured, you can ask Claude questions like:
 - "Validate this data source configuration"
 - "Create a new table with full configuration"
 - "Get detailed information about table 'user_events'"
+
+![Claude Get Table Info](images/ClaudeGetTableInfo.png)
+*Claude can provide detailed information about specific tables, including their schema and configuration.*
 
 ### User & Project Management
 - "Show me my user settings and preferences"
@@ -402,6 +392,9 @@ Once configured, you can ask Claude questions like:
 
 ### Sample Data Examples
 The MCP server can retrieve real-time streaming data samples with different sampling modes:
+
+![Claude Job Sample](images/ClaudeJobSample.png)
+*Claude can retrieve real-time sample data from running jobs, showing actual streaming data.*
 
 **Periodic Sampling (default):**
 ```json
