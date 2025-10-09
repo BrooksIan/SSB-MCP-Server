@@ -156,6 +156,17 @@ All configuration is done via environment variables:
 
 \* Either `SSB_API_BASE` (for direct) or `KNOX_GATEWAY_URL` (for Knox) is required
 
+## Example Functionality
+
+The SSB MCP Server provides comprehensive access to SQL Stream Builder through Claude Desktop. Here are some visual examples of the functionality:
+
+### SSB Home Dashboard
+![SSB Home Dashboard](images/SSB_Home_Branded.jpg)
+*The main SSB interface showing the home dashboard with available streams and jobs, featuring the SSB MCP Server integration with prominent branding.*
+
+**Standard Brand Box Versions:**
+- ![SSB Home Branded](images/SSB_Home_branded.png) - Top positioned with yellow text
+
 ## Available Tools
 
 ### 🔧 Advanced Job Management
@@ -269,17 +280,6 @@ All configuration is done via environment variables:
 - `get_cluster_info()` - Get cluster information
 - `get_cluster_health()` - Get cluster health status
 - `get_ssb_info()` - Get SSB version and system info
-
-## Example Functionality
-
-The SSB MCP Server provides comprehensive access to SQL Stream Builder through Claude Desktop. Here are some visual examples of the functionality:
-
-### SSB Home Dashboard
-![SSB Home Dashboard](images/SSB_Home_Branded.jpg)
-*The main SSB interface showing the home dashboard with available streams and jobs, featuring the SSB MCP Server integration with prominent branding.*
-
-**Standard Brand Box Versions:**
-- ![SSB Home Branded](images/SSB_Home_branded.png) - Top positioned with yellow text
 
 ## Example Usage
 
