@@ -18,7 +18,20 @@
         "run",
         "ssb-mcp-server"
       ],
-      "cwd": "/Users/ibrooks/Documents/GitHub/SSB-MCP-Server"
+      "cwd": "/Users/ibrooks/Documents/GitHub/SSB-MCP-Server",
+      "env": {
+        "SSB_API_BASE": "http://localhost:18121",
+        "SSB_USER": "admin",
+        "SSB_PASSWORD": "admin",
+        "SSB_READONLY": "false",
+        "MCP_TRANSPORT": "stdio",
+        "MCP_HOST": "127.0.0.1",
+        "MCP_PORT": "3030",
+        "KNOX_VERIFY_SSL": "true",
+        "HTTP_TIMEOUT_SECONDS": "30",
+        "HTTP_MAX_RETRIES": "3",
+        "HTTP_RATE_LIMIT_RPS": "5"
+      }
     }
   }
 }
