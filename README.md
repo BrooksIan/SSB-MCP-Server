@@ -676,9 +676,9 @@ The SSB MCP Server includes a comprehensive test suite to verify all 80+ MCP too
 Fast functionality verification for core MCP features:
 ```bash
 # Run quick test (5 seconds)
-python Testing/quick_test.py
+cd Testing && python quick_test.py
 
-# Or with uv
+# Or with uv from project root
 uv run python Testing/quick_test.py
 ```
 
@@ -695,9 +695,9 @@ uv run python Testing/quick_test.py
 Complete test suite covering all 80+ MCP tools across 15 functional categories:
 ```bash
 # Run comprehensive test (15 seconds)
-python Testing/test_all_mcp_features.py
+cd Testing && python test_all_mcp_features.py
 
-# Or with uv
+# Or with uv from project root
 uv run python Testing/test_all_mcp_features.py
 ```
 
@@ -722,13 +722,13 @@ uv run python Testing/test_all_mcp_features.py
 Flexible test execution with multiple options:
 ```bash
 # Quick test only
-python Testing/run_tests.py --quick
+cd Testing && python run_tests.py --quick
 
 # Comprehensive test only
-python Testing/run_tests.py --comprehensive
+cd Testing && python run_tests.py --comprehensive
 
 # All tests (default)
-python Testing/run_tests.py --all
+cd Testing && python run_tests.py --all
 ```
 
 #### **Test Configuration** (`Testing/test_config.py`)
@@ -818,13 +818,13 @@ SSB_READONLY=false
 #### **Test Execution**
 ```bash
 # Quick verification (recommended for CI/CD)
-python Testing/run_tests.py --quick
+cd Testing && python run_tests.py --quick
 
 # Full validation (recommended for development)
-python Testing/run_tests.py --comprehensive
+cd Testing && python run_tests.py --comprehensive
 
 # Complete testing (recommended for releases)
-python Testing/run_tests.py --all
+cd Testing && python run_tests.py --all
 ```
 
 ### 📈 Test Output
