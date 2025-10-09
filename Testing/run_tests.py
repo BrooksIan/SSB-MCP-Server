@@ -26,7 +26,7 @@ def run_quick_test():
     print("=" * 50)
     
     try:
-        import quick_test
+        from . import quick_test
         success = quick_test.quick_test()
         return success
     except Exception as e:
@@ -40,7 +40,7 @@ def run_comprehensive_test():
     print("=" * 50)
     
     try:
-        import test_all_mcp_features
+        from . import test_all_mcp_features
         tester = test_all_mcp_features.MCPFeatureTester()
         results = tester.run_all_tests()
         return results['passed'] / results['total_tests'] >= 0.8

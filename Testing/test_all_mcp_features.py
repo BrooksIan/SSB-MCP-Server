@@ -11,8 +11,8 @@ import sys
 from typing import Dict, Any, List
 from datetime import datetime
 
-# Add the src directory to the path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+# Add the src directory to the path (go up one level from Testing/)
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from ssb_mcp_server.server import build_client
 from ssb_mcp_server.config import ServerConfig

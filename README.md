@@ -672,14 +672,14 @@ The SSB MCP Server includes a comprehensive test suite to verify all 80+ MCP too
 
 ### 🧪 Test Files
 
-#### **Quick Test** (`quick_test.py`)
+#### **Quick Test** (`Testing/quick_test.py`)
 Fast functionality verification for core MCP features:
 ```bash
 # Run quick test (5 seconds)
-python quick_test.py
+python Testing/quick_test.py
 
 # Or with uv
-uv run python quick_test.py
+uv run python Testing/quick_test.py
 ```
 
 **Tests:**
@@ -691,14 +691,14 @@ uv run python quick_test.py
 - User information and settings
 - Query execution and SQL processing
 
-#### **Comprehensive Test** (`test_all_mcp_features.py`)
+#### **Comprehensive Test** (`Testing/test_all_mcp_features.py`)
 Complete test suite covering all 80+ MCP tools across 15 functional categories:
 ```bash
 # Run comprehensive test (15 seconds)
-python test_all_mcp_features.py
+python Testing/test_all_mcp_features.py
 
 # Or with uv
-uv run python test_all_mcp_features.py
+uv run python Testing/test_all_mcp_features.py
 ```
 
 **Test Categories:**
@@ -718,23 +718,23 @@ uv run python test_all_mcp_features.py
 - 🏢 Cluster Management (2 tools)
 - 🗃️ Kafka Table Management (2 tools)
 
-#### **Test Runner** (`run_tests.py`)
+#### **Test Runner** (`Testing/run_tests.py`)
 Flexible test execution with multiple options:
 ```bash
 # Quick test only
-python run_tests.py --quick
+python Testing/run_tests.py --quick
 
 # Comprehensive test only
-python run_tests.py --comprehensive
+python Testing/run_tests.py --comprehensive
 
 # All tests (default)
-python run_tests.py --all
+python Testing/run_tests.py --all
 ```
 
-#### **Test Configuration** (`test_config.py`)
+#### **Test Configuration** (`Testing/test_config.py`)
 Test utilities and environment setup:
 ```python
-from test_config import setup_test_environment, get_test_data
+from Testing.test_config import setup_test_environment, get_test_data
 
 # Set up test environment
 setup_test_environment()
@@ -818,13 +818,13 @@ SSB_READONLY=false
 #### **Test Execution**
 ```bash
 # Quick verification (recommended for CI/CD)
-python run_tests.py --quick
+python Testing/run_tests.py --quick
 
 # Full validation (recommended for development)
-python run_tests.py --comprehensive
+python Testing/run_tests.py --comprehensive
 
 # Complete testing (recommended for releases)
-python run_tests.py --all
+python Testing/run_tests.py --all
 ```
 
 ### 📈 Test Output
