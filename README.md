@@ -1,5 +1,8 @@
 # SSB MCP Server
 
+![SSB Home Dashboard](images/SSB_Home_Branded.jpg)
+*The main SSB interface showing the home dashboard with available streams and jobs, featuring the SSB MCP Server integration with prominent branding.*
+
 Model Context Protocol server providing comprehensive access to SQL Stream Builder (SSB) with support for both direct SSB access and Apache Knox integration.
 
 **Works with both standalone SSB deployments and Cloudera Data Platform (CDP) SSB deployments** - provides full access to SSB functionality through Claude Desktop.
@@ -160,12 +163,9 @@ All configuration is done via environment variables:
 
 The SSB MCP Server provides comprehensive access to SQL Stream Builder through Claude Desktop. Here are some visual examples of the functionality:
 
-### SSB Home Dashboard
-![SSB Home Dashboard](images/SSB_Home_Branded.jpg)
-*The main SSB interface showing the home dashboard with available streams and jobs, featuring the SSB MCP Server integration with prominent branding.*
 
 **Standard Brand Box Versions:**
-- ![SSB Home Branded](images/SSB_Home_branded.png) - Top positioned with yellow text
+- ![SSB Home Branded](images/SSB_Home.png) - Top positioned with yellow text
 
 ## Available Tools
 
