@@ -12,12 +12,9 @@
       }
     },
     "ssb-mcp-server": {
-      "command": "uvx",
-      "args": [
-        "mcp",
-        "run",
-        "ssb-mcp-server"
-      ],
+      "command": "/Users/ibrooks/Documents/GitHub/SSB-MCP-Server/run_mcp_server.sh",
+      "args": [],
+      "cwd": "/Users/ibrooks/Documents/GitHub/SSB-MCP-Server",
       "env": {
         "SSB_API_BASE": "http://localhost:18121",
         "SSB_USER": "admin",
