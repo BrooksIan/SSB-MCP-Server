@@ -8,10 +8,10 @@ import requests
 import sys
 import os
 
-# Add config to Python path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'config'))
+# Add parent directory to Python path to import config module
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-from config_loader import ConfigLoader
+from config.config_loader import ConfigLoader
 
 def test_different_endpoints():
     """Test different possible SSB API endpoints."""

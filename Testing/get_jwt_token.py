@@ -10,10 +10,16 @@ import sys
 import os
 from urllib.parse import urljoin
 
-# Add config to Python path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'config'))
+# Add parent directory to Python path to access config module
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if parent_dir not in sys.path:
+    sys.path.insert(0, parent_dir)
 
-from config_loader import ConfigLoader
+try:
+    from config.config_loader import ConfigLoader
+except ImportError:
+    print("❌ Could not import config_loader. Make sure config/config_loader.py exists")
+    sys.exit(1)
 
 def get_jwt_token_from_username_password():
     """Get JWT token using username/password authentication."""
