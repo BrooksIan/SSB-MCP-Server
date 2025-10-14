@@ -69,6 +69,8 @@ https://<your-ssb-host>/ssb/api/v1
 
 Get your Knox JWT token from the CDP UI and use it with the configurations below.
 
+![Knox Token Generation](images/KnoxToken_BaseURL.png)
+
 ## Setup
 
 ### Option 1: Claude Desktop (Local)

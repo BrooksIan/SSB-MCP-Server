@@ -2,6 +2,8 @@
 
 This directory contains configuration files for the SSB MCP Server.
 
+![Knox Token Generation](images/KnoxToken_BaseURL.png)
+
 ## Files
 
 - `cloud_ssb_config.json.example` - Template configuration file with placeholder values

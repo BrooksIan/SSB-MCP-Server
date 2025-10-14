@@ -2,6 +2,8 @@
 
 This directory contains comprehensive testing tools and documentation for the SSB MCP Server.
 
+![Knox Token Generation](images/KnoxToken_BaseURL.png)
+
 ## ⚙️ Configuration Setup
 
 Before running cloud SSB tests, configure your environment by editing `config/cloud_ssb_config.json`:
