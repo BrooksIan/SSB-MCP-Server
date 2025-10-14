@@ -76,9 +76,11 @@ def test_knox_gateway_endpoints():
     # Test different possible endpoints
     base_endpoints = [
         "/irb-ssb-test/cdp-proxy-token/ssb-sse-api",
-        "/irb-ssb-test/cdp-proxy-token/ssb-sse-api/api",
         "/irb-ssb-test/cdp-proxy-token/ssb-mve-api",
-        "/irb-ssb-test/cdp-proxy/ssb-mve-api"
+        "/irb-ssb-test/cdp-proxy/ssb-mve-api",
+        "/irb-ssb-test/cdp-proxy/ssb-sse-api",
+        "/irb-ssb-test/cdp-proxy-api/ssb-mve-api",
+        "/irb-ssb-test/cdp-proxy-api/ssb-ssb-api/"
     ]
     
     api_endpoints = [
