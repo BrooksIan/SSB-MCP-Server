@@ -2,7 +2,7 @@
 
 This directory contains configuration files for the SSB MCP Server.
 
-![Knox Token Generation](images/KnoxToken_BaseURL.png)
+![Knox Token Generation](../images/KnoxToken_BaseURL.png)
 
 ## Files
 

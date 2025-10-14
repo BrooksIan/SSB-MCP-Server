@@ -2,7 +2,7 @@
 
 This directory contains comprehensive testing tools and documentation for the SSB MCP Server.
 
-![Knox Token Generation](images/KnoxToken_BaseURL.png)
+![Knox Token Generation](../images/KnoxToken_BaseURL.png)
 
 ## ⚙️ Configuration Setup
 
