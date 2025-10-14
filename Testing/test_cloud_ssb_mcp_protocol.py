@@ -11,12 +11,14 @@ import requests
 import time
 from datetime import datetime
 
-# Cloud SSB Configuration
-CLOUD_SSB_CONFIG = {
-    'knox_gateway_url': 'https://irb-ssb-test-manager0.cgsi-dem.prep-j1tk.a3.cloudera.site:443',
-    'jwt_token': 'eyJqa3UiOiJodHRwczovL2lyYi1zc2ItdGVzdC1tYW5hZ2VyMC5jZ3NpLWRlbS5wcmVwLWoxdGsuYTMuY2xvdWRlcmEuc2l0ZS9pcmItc3NiLXRlc3QvaG9tZXBhZ2Uva25veHRva2VuL2FwaS92Mi9qd2tzLmpzb24iLCJraWQiOiJ5VTJhOTRvOUtNVXZhalZtQmlhb1o1ajVjVVY2OTA4a09HbmdpbUdOREZNIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJpYnJvb2tzIiwiYXVkIjoiY2RwLXByb3h5LXRva2VuIiwiamt1IjoiaHR0cHM6Ly9pcmItc3NiLXRlc3QtbWFuYWdlcjAuY2dzaS1kZW0ucHJlcC1qMXRrLmEzLmNsb3VkZXJhLnNpdGUvaXJiLXNzYi10ZXN0L2hvbWVwYWdlL2tub3h0b2tlbi9hcGkvdjIvandrcy5qc29uIiwia2lkIjoieVUyYTk0bzlLTVV2YWpWbUJpYW9aNWo1Y1VWNjkwOGtPR25naW1HTkRGTSIsImlzcyI6IktOT1hTU08iLCJleHAiOjE3NjA1NTM4MzksIm1hbmFnZWQudG9rZW4iOiJ0cnVlIiwia25veC5pZCI6ImM1ZmU0ZmNjLWViZTQtNGNiOS1iYTJmLTM1ZGNlYTAzOTkyOSJ9.a8GrZg7LWli42i7xOHFTt8oi9q03_wcrBIv8GAYyXLYFX1IdUE0GuaVQ8m1Ok2lulm3tcB1IwTaxdTblJ3g6WHCo_5GcvWIXd8Bue0o2_CE0BPcgolf9O3uh0Ftk2JP8RPDgtzmiKhqTmjPbQK6ochAK_AGC58gdLf9omsGfF-NQUdIKmAPRIDSlj_vruRrJj9WHcpa9Z1iAT1Mu8Y18ZOw_ixgZ46hP6shJK1J-aZAjFxNKhOUxqjxr39ZXRIX_V8ZwMXWV0mLU22gHkDLMDkiSZ-zQ5OfHVG96-WKHUBHDAaFYaYdIjegzX17y3WqhvhoyVxG0eApMIJQThsqyGA',
-    'ssb_api_base': 'https://irb-ssb-test-manager0.cgsi-dem.prep-j1tk.a3.cloudera.site:443/irb-ssb-test/cdp-proxy-token/ssb-sse-api/api/v1'
-}
+# Add config directory to path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'config'))
+
+from config_loader import ConfigLoader
+
+# Load Cloud SSB Configuration
+config_loader = ConfigLoader()
+CLOUD_SSB_CONFIG = config_loader.get_cloud_ssb_config()
 
 class MCPTestProtocol:
     """Comprehensive MCP test protocol for cloud SSB environment."""
@@ -38,16 +40,10 @@ class MCPTestProtocol:
         """Set up environment for MCP server testing."""
         print("🔧 Setting up MCP test environment...")
         
-        # Set environment variables
-        os.environ.update({
-            'KNOX_GATEWAY_URL': CLOUD_SSB_CONFIG['knox_gateway_url'],
-            'KNOX_TOKEN': CLOUD_SSB_CONFIG['jwt_token'],
-            'SSB_READONLY': 'false',
-            'MCP_TRANSPORT': 'stdio',
-            'KNOX_VERIFY_SSL': 'true',
-            'HTTP_TIMEOUT_SECONDS': '60',
-            'PYTHONPATH': '/Users/ibrooks/Documents/GitHub/SSB-MCP-Server/src'
-        })
+        # Set environment variables from config
+        env_vars = config_loader.get_environment_variables(use_cloud=True)
+        env_vars['PYTHONPATH'] = '/Users/ibrooks/Documents/GitHub/SSB-MCP-Server/src'
+        os.environ.update(env_vars)
         
         # Add src to Python path
         sys.path.insert(0, '/Users/ibrooks/Documents/GitHub/SSB-MCP-Server/src')
@@ -81,7 +77,8 @@ class MCPTestProtocol:
         
         try:
             # Test Knox Gateway
-            response = requests.get(CLOUD_SSB_CONFIG['knox_gateway_url'], timeout=10, verify=True)
+            knox_url = CLOUD_SSB_CONFIG.get('knox_gateway_url')
+            response = requests.get(knox_url, timeout=10, verify=True)
             if response.status_code == 200:
                 self.log_test("cloud_connectivity", "PASS", "Knox Gateway accessible")
             else:
@@ -93,8 +90,9 @@ class MCPTestProtocol:
         
         # Test SSB API endpoint
         try:
-            headers = {'Authorization': f'Bearer {CLOUD_SSB_CONFIG["jwt_token"]}'}
-            response = requests.get(f"{CLOUD_SSB_CONFIG['ssb_api_base']}/info", headers=headers, timeout=30, verify=True)
+            headers = {'Authorization': f'Bearer {CLOUD_SSB_CONFIG.get("jwt_token")}'}
+            ssb_base = CLOUD_SSB_CONFIG.get('ssb_api_base')
+            response = requests.get(f"{ssb_base}/info", headers=headers, timeout=30, verify=True)
             if response.status_code == 200:
                 self.log_test("ssb_api_connectivity", "PASS", "SSB API accessible")
                 return True

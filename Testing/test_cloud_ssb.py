@@ -9,12 +9,20 @@ import json
 import requests
 from urllib.parse import urljoin
 
+# Add config to Python path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'config'))
+
+from config_loader import ConfigLoader
+
 def test_cloud_ssb_connection():
     """Test connection to cloud SSB via Knox Gateway with JWT token."""
     
-    # Cloud SSB configuration
-    knox_gateway_url = "https://irb-ssb-test-manager0.cgsi-dem.prep-j1tk.a3.cloudera.site:443"
-    jwt_token = "eyJqa3UiOiJodHRwczovL2lyYi1zc2ItdGVzdC1tYW5hZ2VyMC5jZ3NpLWRlbS5wcmVwLWoxdGsuYTMuY2xvdWRlcmEuc2l0ZS9pcmItc3NiLXRlc3QvaG9tZXBhZ2Uva25veHRva2VuL2FwaS92Mi9qd2tzLmpzb24iLCJraWQiOiJ5VTJhOTRvOUtNVXZhalZtQmlhb1o1ajVjVVY2OTA4a09HbmdpbUdOREZNIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJpYnJvb2tzIiwiYXVkIjoiY2RwLXByb3h5LXRva2VuIiwiamt1IjoiaHR0cHM6Ly9pcmItc3NiLXRlc3QtbWFuYWdlcjAuY2dzaS1kZW0ucHJlcC1qMXRrLmEzLmNsb3VkZXJhLnNpdGUvaXJiLXNzYi10ZXN0L2hvbWVwYWdlL2tub3h0b2tlbi9hcGkvdjIvandrcy5qc29uIiwia2lkIjoieVUyYTk0bzlLTVV2YWpWbUJpYW9aNWo1Y1VWNjkwOGtPR25naW1HTkRGTSIsImlzcyI6IktOT1hTU08iLCJleHAiOjE3NjA1NTM4MzksIm1hbmFnZWQudG9rZW4iOiJ0cnVlIiwia25veC5pZCI6ImM1ZmU0ZmNjLWViZTQtNGNiOS1iYTJmLTM1ZGNlYTAzOTkyOSJ9.a8GrZg7LWli42i7xOHFTt8oi9q03_wcrBIv8GAYyXLYFX1IdUE0GuaVQ8m1Ok2lulm3tcB1IwTaxdTblJ3g6WHCo_5GcvWIXd8Bue0o2_CE0BPcgolf9O3uh0Ftk2JP8RPDgtzmiKhqTmjPbQK6ochAK_AGC58gdLf9omsGfF-NQUdIKmAPRIDSlj_vruRrJj9WHcpa9Z1iAT1Mu8Y18ZOw_ixgZ46hP6shJK1J-aZAjFxNKhOUxqjxr39ZXRIX_V8ZwMXWV0mLU22gHkDLMDkiSZ-zQ5OfHVG96-WKHUBHDAaFYaYdIjegzX17y3WqhvhoyVxG0eApMIJQThsqyGA"
+    # Load Cloud SSB configuration
+    config_loader = ConfigLoader()
+    cloud_config = config_loader.get_cloud_ssb_config()
+    
+    knox_gateway_url = cloud_config.get('knox_gateway_url')
+    jwt_token = cloud_config.get('jwt_token')
 
     
     print(f"\n🌐 Testing connection to cloud SSB...")

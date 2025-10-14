@@ -327,10 +327,11 @@ python test_cloud_ssb_mcp_protocol.py
 ```
 
 **Configuration:**
-The test protocol uses hardcoded values for cloud SSB:
-- Knox Gateway URL: `https://irb-ssb-test-manager0.cgsi-dem.prep-j1tk.a3.cloudera.site:443`
-- SSB API Base: `/irb-ssb-test/cdp-proxy-token/ssb-sse-api/api/v1`
-- JWT Token: Configured for cloud authentication
+The test protocol uses values from the centralized config file (`config/cloud_ssb_config.json`):
+- Knox Gateway URL: Loaded from config
+- SSB API Base: Loaded from config  
+- JWT Token: Loaded from config
+- All cloud SSB settings are centralized and easily configurable
 
 **Test Results:**
 - Real-time test progress

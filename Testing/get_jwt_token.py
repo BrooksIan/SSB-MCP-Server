@@ -7,12 +7,22 @@ This script helps you get a JWT token for use with the MCP server.
 import requests
 import json
 import sys
+import os
 from urllib.parse import urljoin
+
+# Add config to Python path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'config'))
+
+from config_loader import ConfigLoader
 
 def get_jwt_token_from_username_password():
     """Get JWT token using username/password authentication."""
     
-    knox_gateway_url = "https://irb-ssb-test-manager0.cgsi-dem.prep-j1tk.a3.cloudera.site:443"
+    # Load Cloud SSB configuration
+    config_loader = ConfigLoader()
+    cloud_config = config_loader.get_cloud_ssb_config()
+    
+    knox_gateway_url = cloud_config.get('knox_gateway_url')
     
     print("🔐 Getting JWT Token for CDP/SSB Authentication")
     print("=" * 50)
