@@ -33,7 +33,9 @@ def test_different_endpoints():
         f"{knox_url}/irb-ssb-test/cdp-proxy-token/ssb-sse-api/",
         f"{knox_url}/irb-ssb-test/cdp-proxy-token/ssb-sse-api/api/v1",
         f"{knox_url}/irb-ssb-test/cdp-proxy-token/ssb-sse-api/api/",
+        f"{knox_url}/irb-ssb-test/cdp-proxy-token/ssb-sse-api/api/v1/tables",
         f"{knox_url}/irb-ssb-test/cdp-proxy-token/ssb-sse-api/api/v1/jobs",
+        f"{knox_url}/irb-ssb-test/cdp-proxy-token/ssb-sse-api/api/v2/projects",
         f"{knox_url}/irb-ssb-test/cdp-proxy/ssb-mve-api/api/v1/info",
         f"{knox_url}/irb-ssb-test/cdp-proxy/ssb-mve-api/api/v1",
         f"{knox_url}/irb-ssb-test/cdp-proxy/ssb-mve-api/api/",
@@ -48,6 +50,8 @@ def test_different_endpoints():
         'Content-Type': 'application/json'
     }
     
+    successful_endpoints = []
+    
     for i, endpoint in enumerate(endpoints, 1):
         print(f"\n{i}. Testing: {endpoint}")
         try:
@@ -55,20 +59,30 @@ def test_different_endpoints():
             print(f"   Status: {response.status_code}")
             if response.status_code == 200:
                 print(f"   ✅ SUCCESS! Response: {response.json()}")
-                return True
+                successful_endpoints.append(endpoint)
             else:
                 print(f"   ❌ Failed: {response.text[:200]}")
         except Exception as e:
             print(f"   ❌ Error: {e}")
     
-    return False
+    if successful_endpoints:
+        print(f"\n🎉 Found {len(successful_endpoints)} working endpoint(s):")
+        for endpoint in successful_endpoints:
+            print(f"   ✅ {endpoint}")
+        return True
+    else:
+        print("\n❌ No working endpoints found")
+        return False
 
 def test_authentication_methods():
     """Test different authentication methods."""
     
-    # Use hardcoded values since config is simplified
-    knox_url = "https://irb-ssb-test-manager0.cgsi-dem.prep-j1tk.a3.cloudera.site:443"
-    jwt_token = "eyJqa3UiOiJodHRwczovL2lyYi1zc2ItdGVzdC1tYW5hZ2VyMC5jZ3NpLWRlbS5wcmVwLWoxdGsuYTMuY2xvdWRlcmEuc2l0ZS9pcmItc3NiLXRlc3QvaG9tZXBhZ2Uva25veHRva2VuL2FwaS92Mi9qd2tzLmpzb24iLCJraWQiOiJ5VTJhOTRvOUtNVXZhalZtQmlhb1o1ajVjVVY2OTA4a09HbmdpbUdOREZNIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJpYnJvb2tzIiwiYXVkIjoiY2RwLXByb3h5LXRva2VuIiwiamt1IjoiaHR0cHM6Ly9pcmItc3NiLXRlc3QtbWFuYWdlcjAuY2dzaS1kZW0ucHJlcC1qMXRrLmEzLmNsb3VkZXJhLnNpdGUvaXJiLXNzYi10ZXN0L2hvbWVwYWdlL2tub3h0b2tlbi9hcGkvdjIvandrcy5qc29uIiwia2lkIjoieVUyYTk0bzlLTVV2YWpWbUJpYW9aNWo1Y1VWNjkwOGtPR25naW1HTkRGTSIsImlzcyI6IktOT1hTU08iLCJleHAiOjE3NjA1NTAxMTQsIm1hbmFnZWQudG9rZW4iOiJ0cnVlIiwia25veC5pZCI6ImM1N2UzMGJkLWFhMDUtNDNjMS05M2EwLTY4OWVhODMyNmFjZiJ9.Sie9BIK_hF2b0TT0Tujyd9ISlfe6nIQNC4IYRb9j033SSNZ6Y_TmEL_YYIOjjNnOjXGyzsAMX51AGaB1io9lSo_WE_MJUhTgW_PHkMPD8gVjKSXVxM5lHrsEepjOtmJWvYoUY9Ab47r4Qx4HCjau4_zVE-r6m9HQI2RErO0BXYhjUM88whODtNDr1ZYqhv6gxhREovMSxz3Ju2mlUhzBG-Ojt5DDpKAjCl5QjwF91Q8oMTshyC04PzBLarYC0bcuxWznxpPxlGVvIJxeeyEYms53rjICc9r8RocRszn4HnB0hAY47XyDQRjLv8UbctJTd0oImMMEKv0F3kucSHSSUw"
+    # Load Cloud SSB configuration
+    config_loader = ConfigLoader()
+    cloud_config = config_loader.get_cloud_ssb_config()
+    
+    knox_url = cloud_config.get('knox_gateway_url')
+    jwt_token = cloud_config.get('jwt_token')
     
     print("\n🔐 Testing Different Authentication Methods")
     print("=" * 50)
@@ -105,8 +119,11 @@ def test_authentication_methods():
 def test_knox_gateway_info():
     """Test Knox Gateway information endpoints."""
     
-    # Use hardcoded values since config is simplified
-    knox_url = "https://irb-ssb-test-manager0.cgsi-dem.prep-j1tk.a3.cloudera.site:443"
+    # Load Cloud SSB configuration
+    config_loader = ConfigLoader()
+    cloud_config = config_loader.get_cloud_ssb_config()
+    
+    knox_url = cloud_config.get('knox_gateway_url')
     
     print("\n🌐 Testing Knox Gateway Information")
     print("=" * 50)
@@ -139,17 +156,31 @@ if __name__ == "__main__":
     print("=" * 50)
     
     # Test 1: Different endpoints
+    print("\n" + "="*60)
+    print("TEST 1: Testing Different Endpoints")
+    print("="*60)
     success1 = test_different_endpoints()
     
-    if not success1:
-        # Test 2: Different auth methods
-        success2 = test_authentication_methods()
-        
-        if not success2:
-            # Test 3: Knox Gateway info
-            test_knox_gateway_info()
+    # Test 2: Different auth methods
+    print("\n" + "="*60)
+    print("TEST 2: Testing Different Authentication Methods")
+    print("="*60)
+    success2 = test_authentication_methods()
     
+    # Test 3: Knox Gateway info
+    print("\n" + "="*60)
+    print("TEST 3: Testing Knox Gateway Information")
+    print("="*60)
+    test_knox_gateway_info()
+    
+    # Summary
+    print("\n" + "="*60)
+    print("SUMMARY")
+    print("="*60)
     if success1:
-        print("\n🎉 Found working endpoint!")
-    else:
-        print("\n❌ No working endpoint found. Check the JWT token and network access.")
+        print("✅ Found working endpoint(s) in Test 1!")
+    if success2:
+        print("✅ Found working authentication method in Test 2!")
+    if not success1 and not success2:
+        print("❌ No working endpoints or authentication methods found.")
+        print("   Check the JWT token and network access.")
