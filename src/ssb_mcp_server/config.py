@@ -65,4 +65,4 @@ class ServerConfig:
 				raise ValueError(f"Environment variables {', '.join(env_vars)} are set but not being read properly. Please check your MCP server configuration.")
 			else:
 				raise ValueError("KNOX_GATEWAY_URL or SSB_API_BASE must be set. Please configure your MCP server with the appropriate environment variables.")
-		return f"{self.knox_gateway_url.rstrip('/')}/ssb/api/v1"
+		return f"{self.knox_gateway_url.rstrip('/')}/irb-ssb-test/cdp-proxy-token/ssb-sse-api/api/v1"

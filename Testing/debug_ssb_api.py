@@ -10,15 +10,9 @@ import sys
 def test_different_endpoints():
     """Test different possible SSB API endpoints."""
     
-    # Read JWT token from config
-    try:
-        with open('claude_desktop_config.json', 'r') as f:
-            config = json.load(f)
-        jwt_token = config['mcpServers']['ssb-mcp-server']['env']['KNOX_TOKEN']
-        knox_url = config['mcpServers']['ssb-mcp-server']['env']['KNOX_GATEWAY_URL']
-    except Exception as e:
-        print(f"❌ Error reading config: {e}")
-        return False
+    # Use hardcoded values since config is simplified
+    knox_url = "https://irb-ssb-test-manager0.cgsi-dem.prep-j1tk.a3.cloudera.site:443"
+    jwt_token = "eyJqa3UiOiJodHRwczovL2lyYi1zc2ItdGVzdC1tYW5hZ2VyMC5jZ3NpLWRlbS5wcmVwLWoxdGsuYTMuY2xvdWRlcmEuc2l0ZS9pcmItc3NiLXRlc3QvaG9tZXBhZ2Uva25veHRva2VuL2FwaS92Mi9qd2tzLmpzb24iLCJraWQiOiJ5VTJhOTRvOUtNVXZhalZtQmlhb1o1ajVjVVY2OTA4a09HbmdpbUdOREZNIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJpYnJvb2tzIiwiYXVkIjoiY2RwLXByb3h5LXRva2VuIiwiamt1IjoiaHR0cHM6Ly9pcmItc3NiLXRlc3QtbWFuYWdlcjAuY2dzaS1kZW0ucHJlcC1qMXRrLmEzLmNsb3VkZXJhLnNpdGUvaXJiLXNzYi10ZXN0L2hvbWVwYWdlL2tub3h0b2tlbi9hcGkvdjIvandrcy5qc29uIiwia2lkIjoieVUyYTk0bzlLTVV2YWpWbUJpYW9aNWo1Y1VWNjkwOGtPR25naW1HTkRGTSIsImlzcyI6IktOT1hTU08iLCJleHAiOjE3NjA1NTAxMTQsIm1hbmFnZWQudG9rZW4iOiJ0cnVlIiwia25veC5pZCI6ImM1N2UzMGJkLWFhMDUtNDNjMS05M2EwLTY4OWVhODMyNmFjZiJ9.Sie9BIK_hF2b0TT0Tujyd9ISlfe6nIQNC4IYRb9j033SSNZ6Y_TmEL_YYIOjjNnOjXGyzsAMX51AGaB1io9lSo_WE_MJUhTgW_PHkMPD8gVjKSXVxM5lHrsEepjOtmJWvYoUY9Ab47r4Qx4HCjau4_zVE-r6m9HQI2RErO0BXYhjUM88whODtNDr1ZYqhv6gxhREovMSxz3Ju2mlUhzBG-Ojt5DDpKAjCl5QjwF91Q8oMTshyC04PzBLarYC0bcuxWznxpPxlGVvIJxeeyEYms53rjICc9r8RocRszn4HnB0hAY47XyDQRjLv8UbctJTd0oImMMEKv0F3kucSHSSUw"
     
     print("🔍 Debugging SSB API Endpoints")
     print("=" * 50)
@@ -27,10 +21,10 @@ def test_different_endpoints():
     
     # Different possible endpoints to try
     endpoints = [
-        f"{knox_url}/irb-ssb-test/cdp-proxy-token/ssb-mve-api/api/v1/info",
-        f"{knox_url}/irb-ssb-test/cdp-proxy-token/ssb-mve-api/",
-        f"{knox_url}/irb-ssb-test/cdp-proxy-token/ssb-mve-api/api/v1",
-        f"{knox_url}/irb-ssb-test/cdp-proxy-token/ssb-mve-api/api/",
+        f"{knox_url}/irb-ssb-test/cdp-proxy-token/ssb-sse-api/",
+        f"{knox_url}/irb-ssb-test/cdp-proxy-token/ssb-sse-api/api/v1",
+        f"{knox_url}/irb-ssb-test/cdp-proxy-token/ssb-sse-api/api/",
+        f"{knox_url}/irb-ssb-test/cdp-proxy-token/ssb-sse-api/api/v1/jobs",
         f"{knox_url}/irb-ssb-test/cdp-proxy/ssb-mve-api/api/v1/info",
         f"{knox_url}/irb-ssb-test/cdp-proxy/ssb-mve-api/api/v1",
         f"{knox_url}/irb-ssb-test/cdp-proxy/ssb-mve-api/api/",
@@ -63,21 +57,15 @@ def test_different_endpoints():
 def test_authentication_methods():
     """Test different authentication methods."""
     
-    # Read JWT token from config
-    try:
-        with open('claude_desktop_config.json', 'r') as f:
-            config = json.load(f)
-        jwt_token = config['mcpServers']['ssb-mcp-server']['env']['KNOX_TOKEN']
-        knox_url = config['mcpServers']['ssb-mcp-server']['env']['KNOX_GATEWAY_URL']
-    except Exception as e:
-        print(f"❌ Error reading config: {e}")
-        return False
+    # Use hardcoded values since config is simplified
+    knox_url = "https://irb-ssb-test-manager0.cgsi-dem.prep-j1tk.a3.cloudera.site:443"
+    jwt_token = "eyJqa3UiOiJodHRwczovL2lyYi1zc2ItdGVzdC1tYW5hZ2VyMC5jZ3NpLWRlbS5wcmVwLWoxdGsuYTMuY2xvdWRlcmEuc2l0ZS9pcmItc3NiLXRlc3QvaG9tZXBhZ2Uva25veHRva2VuL2FwaS92Mi9qd2tzLmpzb24iLCJraWQiOiJ5VTJhOTRvOUtNVXZhalZtQmlhb1o1ajVjVVY2OTA4a09HbmdpbUdOREZNIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJpYnJvb2tzIiwiYXVkIjoiY2RwLXByb3h5LXRva2VuIiwiamt1IjoiaHR0cHM6Ly9pcmItc3NiLXRlc3QtbWFuYWdlcjAuY2dzaS1kZW0ucHJlcC1qMXRrLmEzLmNsb3VkZXJhLnNpdGUvaXJiLXNzYi10ZXN0L2hvbWVwYWdlL2tub3h0b2tlbi9hcGkvdjIvandrcy5qc29uIiwia2lkIjoieVUyYTk0bzlLTVV2YWpWbUJpYW9aNWo1Y1VWNjkwOGtPR25naW1HTkRGTSIsImlzcyI6IktOT1hTU08iLCJleHAiOjE3NjA1NTAxMTQsIm1hbmFnZWQudG9rZW4iOiJ0cnVlIiwia25veC5pZCI6ImM1N2UzMGJkLWFhMDUtNDNjMS05M2EwLTY4OWVhODMyNmFjZiJ9.Sie9BIK_hF2b0TT0Tujyd9ISlfe6nIQNC4IYRb9j033SSNZ6Y_TmEL_YYIOjjNnOjXGyzsAMX51AGaB1io9lSo_WE_MJUhTgW_PHkMPD8gVjKSXVxM5lHrsEepjOtmJWvYoUY9Ab47r4Qx4HCjau4_zVE-r6m9HQI2RErO0BXYhjUM88whODtNDr1ZYqhv6gxhREovMSxz3Ju2mlUhzBG-Ojt5DDpKAjCl5QjwF91Q8oMTshyC04PzBLarYC0bcuxWznxpPxlGVvIJxeeyEYms53rjICc9r8RocRszn4HnB0hAY47XyDQRjLv8UbctJTd0oImMMEKv0F3kucSHSSUw"
     
     print("\n🔐 Testing Different Authentication Methods")
     print("=" * 50)
     
     # Test endpoint (using the most likely one)
-    endpoint = f"{knox_url}/irb-ssb-test/cdp-proxy-token/ssb-mve-api/api/v1/info"
+    endpoint = f"{knox_url}/irb-ssb-test/cdp-proxy-token/ssb-sse-api/api/v1/info"
     
     # Different auth methods
     auth_methods = [
@@ -108,13 +96,8 @@ def test_authentication_methods():
 def test_knox_gateway_info():
     """Test Knox Gateway information endpoints."""
     
-    try:
-        with open('claude_desktop_config.json', 'r') as f:
-            config = json.load(f)
-        knox_url = config['mcpServers']['ssb-mcp-server']['env']['KNOX_GATEWAY_URL']
-    except Exception as e:
-        print(f"❌ Error reading config: {e}")
-        return False
+    # Use hardcoded values since config is simplified
+    knox_url = "https://irb-ssb-test-manager0.cgsi-dem.prep-j1tk.a3.cloudera.site:443"
     
     print("\n🌐 Testing Knox Gateway Information")
     print("=" * 50)

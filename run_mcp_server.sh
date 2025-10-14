@@ -47,4 +47,5 @@ fi
 echo "SSB_READONLY: $SSB_READONLY"
 
 # Activate the virtual environment and run the MCP server
-exec /Users/ibrooks/Documents/GitHub/SSB-MCP-Server/.venv/bin/python -m ssb_mcp_server.server
+source /Users/ibrooks/Documents/GitHub/SSB-MCP-Server/.venv/bin/activate
+exec python -m ssb_mcp_server.server
