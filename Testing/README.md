@@ -2,6 +2,53 @@
 
 This directory contains comprehensive testing tools and documentation for the SSB MCP Server.
 
+## ⚙️ Configuration Setup
+
+Before running cloud SSB tests, configure your environment by editing `config/cloud_ssb_config.json`:
+
+```json
+{
+  "cloud_ssb": {
+    "knox_gateway_url": "https://your-ssb-host:443",
+    "ssb_api_base": "https://your-ssb-host:443/irb-ssb-test/cdp-proxy-token/ssb-sse-api/api/v1",
+    "jwt_token": "your-jwt-token-here",
+    "ssb_readonly": false,
+    "knox_verify_ssl": true,
+    "http_timeout_seconds": 60,
+    "http_max_retries": 3,
+    "http_rate_limit_rps": 5
+  }
+}
+```
+
+### **Required Configuration Values:**
+
+- **`knox_gateway_url`**: Your Knox Gateway URL (e.g., `https://your-ssb-host:443`)
+- **`jwt_token`**: Your JWT authentication token
+- **`ssb_api_base`**: Full SSB API endpoint URL
+
+### **Optional Configuration Values:**
+
+- **`ssb_readonly`**: Set to `true` for read-only mode (default: `false`)
+- **`knox_verify_ssl`**: SSL certificate verification (default: `true`)
+- **`http_timeout_seconds`**: HTTP request timeout (default: `60`)
+- **`http_max_retries`**: Maximum retry attempts (default: `3`)
+- **`http_rate_limit_rps`**: Rate limit requests per second (default: `5`)
+
+### **Getting Your JWT Token:**
+
+1. **From CDP UI**: Navigate to your CDP environment and obtain the JWT token
+2. **Using Helper Script**: Run `python get_jwt_token.py` to get a token programmatically
+3. **Manual Configuration**: Copy your token directly into the config file
+
+### **Configuration Validation:**
+
+Test your configuration with:
+```bash
+cd Testing
+python test_cloud_ssb.py
+```
+
 ## 🧪 Test Files
 
 ### **Quick Test** (`quick_test.py`)
