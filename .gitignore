@@ -138,3 +138,6 @@ dmypy.json
 # OS
 .DS_Store
 Thumbs.db
+
+# Configuration files with personal information
+config/cloud_ssb_config.json

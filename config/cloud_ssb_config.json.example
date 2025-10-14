@@ -1,0 +1,25 @@
+{
+  "cloud_ssb": {
+    "knox_gateway_url": "https://your-knox-gateway-url:443",
+    "ssb_api_base": "https://your-knox-gateway-url:443/irb-ssb-test/cdp-proxy-token/ssb-sse-api/api/v1",
+    "jwt_token": "YOUR_JWT_TOKEN_HERE",
+    "ssb_readonly": false,
+    "knox_verify_ssl": true,
+    "http_timeout_seconds": 60,
+    "http_max_retries": 3,
+    "http_rate_limit_rps": 5
+  },
+  "local_ssb": {
+    "ssb_api_base": "http://localhost:18121",
+    "ssb_user": "admin",
+    "ssb_password": "admin",
+    "ssb_readonly": false,
+    "http_timeout_seconds": 30
+  },
+  "mcp_server": {
+    "transport": "stdio",
+    "host": "127.0.0.1",
+    "port": 3030,
+    "pythonpath": "/path/to/your/SSB-MCP-Server/src"
+  }
+}
