@@ -37,8 +37,8 @@ class KnoxAuthFactory:
 			return session
 		
 		if self.token:
-			# For CDP SSB, Knox JWT tokens must be sent as cookies, not Bearer headers
-			session.headers["Cookie"] = f"hadoop-jwt={self.token}"
+			# For CDP SSB, use Bearer token authentication
+			session.headers["Authorization"] = f"Bearer {self.token}"
 			return session
 
 		if self.passcode_token:

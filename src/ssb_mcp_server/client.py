@@ -105,7 +105,7 @@ class SSBClient:
 	def get_ssb_info(self) -> Dict[str, Any]:
 		"""Get SSB version and system information."""
 		# Use jobs endpoint to get SSB information
-		jobs = self._get("api/v1/jobs")
+		jobs = self._get("jobs")
 		return {
 			"status": "connected",
 			"jobs_count": len(jobs.get("jobs", [])),
@@ -114,12 +114,12 @@ class SSBClient:
 
 	def list_streams(self) -> Dict[str, Any]:
 		"""List all SQL streams (jobs)."""
-		return self._get("api/v1/jobs")
+		return self._get("jobs")
 
 	def get_stream(self, stream_name: str) -> Dict[str, Any]:
 		"""Get details of a specific stream (job)."""
 		# For now, return job list and filter by name
-		jobs = self._get("api/v1/jobs")
+		jobs = self._get("jobs")
 		for job in jobs.get("jobs", []):
 			if job.get("name") == stream_name:
 				return job
@@ -133,7 +133,7 @@ class SSBClient:
 				"job_name": stream_name
 			}
 		}
-		return self._post("api/v1/jobs", json_data=data)
+		return self._post("jobs", json_data=data)
 
 	def update_stream(self, stream_name: str, sql_query: str, description: Optional[str] = None) -> Dict[str, Any]:
 		"""Update an existing SQL stream."""
@@ -166,8 +166,8 @@ class SSBClient:
 
 	def list_tables(self) -> Dict[str, Any]:
 		"""List all available tables."""
-		# Use data sources endpoint as tables in SSB
-		return self._get("api/v1/data-sources")
+		# Use tables endpoint for SSB
+		return self._get("tables")
 
 	def get_table_schema(self, table_name: str) -> Dict[str, Any]:
 		"""Get schema for a specific table."""
@@ -211,7 +211,7 @@ class SSBClient:
 				}
 			}
 		
-		response = self._post("api/v1/sql/execute", json_data=data)
+		response = self._post("sql/execute", json_data=data)
 		
 		# Enhance the response with more context
 		if response.get("type") == "job":
@@ -279,12 +279,12 @@ class SSBClient:
 
 	def list_connectors(self) -> Dict[str, Any]:
 		"""List all available connectors."""
-		return self._get("api/v1/ddl/connectors")
+		return self._get("ddl/connectors")
 
 	def get_connector(self, connector_name: str) -> Dict[str, Any]:
 		"""Get details of a specific connector."""
 		# For now, return a placeholder since we need to filter from the list
-		connectors = self._get("api/v1/ddl/connectors")
+		connectors = self._get("ddl/connectors")
 		for connector in connectors:
 			if connector.get("type") == connector_name:
 				return connector
@@ -305,7 +305,7 @@ class SSBClient:
 	
 	def get_job_status(self, job_id: int) -> Dict[str, Any]:
 		"""Get status of a specific job."""
-		jobs = self._get("api/v1/jobs")
+		jobs = self._get("jobs")
 		for job in jobs.get("jobs", []):
 			if job.get("job_id") == job_id:
 				return job
@@ -314,7 +314,7 @@ class SSBClient:
 	def get_job_sample(self, sample_id: str) -> Dict[str, Any]:
 		"""Get sample data from a job execution."""
 		try:
-			response = self._get(f"api/v1/samples/{sample_id}")
+			response = self._get(f"samples/{sample_id}")
 			# Add helpful context to the response
 			if response.get("records"):
 				response["message"] = f"Retrieved {len(response['records'])} sample records"
@@ -343,7 +343,7 @@ class SSBClient:
 	def stop_job(self, job_id: int, savepoint: bool = True) -> Dict[str, Any]:
 		"""Stop a specific SSB job."""
 		data = {"savepoint": savepoint}
-		return self._post(f"api/v1/jobs/{job_id}/stop", json_data=data)
+		return self._post(f"jobs/{job_id}/stop", json_data=data)
 	
 	def execute_job(self, job_id: int, sql_query: str) -> Dict[str, Any]:
 		"""Execute/restart a specific SSB job with new SQL."""
@@ -353,7 +353,7 @@ class SSBClient:
 			sql_query += ';'
 		
 		data = {"sql": sql_query}
-		return self._post(f"api/v1/jobs/{job_id}/execute", json_data=data)
+		return self._post(f"jobs/{job_id}/execute", json_data=data)
 	
 	def configure_sampling(self, sample_id: str, sample_interval: int = 1000, sample_count: int = 100, window_size: int = 100, sample_all_messages: bool = False) -> Dict[str, Any]:
 		"""Configure sampling parameters for a job."""
@@ -370,11 +370,11 @@ class SSBClient:
 			data["sample_count"] = 10000  # High count to capture all messages
 			data["window_size"] = 10000
 		
-		return self._post(f"api/v1/samples/{sample_id}/configure", json_data=data)
+		return self._post(f"samples/{sample_id}/configure", json_data=data)
 	
 	def list_jobs_with_samples(self) -> Dict[str, Any]:
 		"""List all jobs with their sample information."""
-		jobs = self._get("api/v1/jobs")
+		jobs = self._get("jobs")
 		job_list = []
 		for job in jobs.get("jobs", []):
 			job_info = {
@@ -445,7 +445,7 @@ class SSBClient:
 		}
 		
 		try:
-			response = self._post("api/v1/data-sources", json_data=data_source)
+			response = self._post("data-sources", json_data=data_source)
 			response["message"] = f"Kafka table '{table_name}' created successfully with connector '{kafka_connector_type}'"
 			response["kafka_topic"] = topic
 			response["bootstrap_servers"] = bootstrap_servers
@@ -468,7 +468,7 @@ class SSBClient:
 		
 		# Get connector details
 		try:
-			connectors = self._get("api/v1/ddl/connectors")
+			connectors = self._get("ddl/connectors")
 			kafka_connector = None
 			for connector in connectors:
 				if connector.get("type") == kafka_connector_type:
@@ -499,7 +499,7 @@ class SSBClient:
 		
 		# Check if the requested catalog exists, fallback to default_catalog if not
 		try:
-			catalogs_result = self._post("api/v1/sql/execute", json_data={"sql": "SHOW CATALOGS;"})
+			catalogs_result = self._post("sql/execute", json_data={"sql": "SHOW CATALOGS;"})
 			available_catalogs = []
 			if catalogs_result.get("table_data"):
 				available_catalogs = [cat.get("catalog name", "") for cat in catalogs_result["table_data"]["data"]]
@@ -558,14 +558,14 @@ class SSBClient:
 		
 		try:
 			# Execute the DDL
-			response = self._post("api/v1/sql/execute", json_data={"sql": ddl_sql})
+			response = self._post("sql/execute", json_data={"sql": ddl_sql})
 			
 			# Check if table is now available by switching to the target database
 			try:
 				# Switch to target database
-				self._post("api/v1/sql/execute", json_data={"sql": f"USE {catalog}.{database};"})
+				self._post("sql/execute", json_data={"sql": f"USE {catalog}.{database};"})
 				# Check tables in target database
-				available_tables = self._post("api/v1/sql/execute", json_data={"sql": "SHOW TABLES;"})
+				available_tables = self._post("sql/execute", json_data={"sql": "SHOW TABLES;"})
 				table_available = False
 				if available_tables.get("table_data"):
 					for table in available_tables["table_data"]["data"]:
@@ -573,7 +573,7 @@ class SSBClient:
 							table_available = True
 							break
 				# Switch back to default_database
-				self._post("api/v1/sql/execute", json_data={"sql": "USE default_catalog.default_database;"})
+				self._post("sql/execute", json_data={"sql": "USE default_catalog.default_database;"})
 			except:
 				table_available = False
 			
@@ -600,27 +600,27 @@ class SSBClient:
 	
 	def get_job_events(self, job_id: int) -> Dict[str, Any]:
 		"""Get detailed job event history and timeline."""
-		return self._get(f"api/v1/jobs/{job_id}/events")
+		return self._get(f"jobs/{job_id}/events")
 	
 	def get_job_state(self, job_id: int) -> Dict[str, Any]:
 		"""Get comprehensive job state information."""
-		return self._get(f"api/v1/jobs/{job_id}/state")
+		return self._get(f"jobs/{job_id}/state")
 	
 	def get_job_mv_endpoints(self, job_id: int) -> Dict[str, Any]:
 		"""Get materialized view endpoints for a job."""
-		return self._get(f"api/v1/jobs/{job_id}/mv")
+		return self._get(f"jobs/{job_id}/mv")
 	
 	def create_job_mv_endpoint(self, job_id: int, mv_config: Dict[str, Any]) -> Dict[str, Any]:
 		"""Create or update a materialized view endpoint for a job."""
-		return self._post(f"api/v1/jobs/{job_id}/mv", json_data=mv_config)
+		return self._post(f"jobs/{job_id}/mv", json_data=mv_config)
 	
 	def copy_job(self, job_id: int) -> Dict[str, Any]:
 		"""Duplicate an existing job."""
-		return self._post(f"api/v1/jobs/{job_id}/copy")
+		return self._post(f"jobs/{job_id}/copy")
 	
 	def copy_data_source(self, data_source_id: str) -> Dict[str, Any]:
 		"""Clone a data source."""
-		return self._post(f"api/v1/data-sources/{data_source_id}/copy")
+		return self._post(f"data-sources/{data_source_id}/copy")
 
 	# ============================================================================
 	# HIGH-PRIORITY ADDITIONS - MONITORING & DIAGNOSTICS
@@ -628,15 +628,15 @@ class SSBClient:
 	
 	def get_diagnostic_counters(self) -> Dict[str, Any]:
 		"""Get system performance counters and diagnostics."""
-		return self._get("api/v1/diag/counters")
+		return self._get("diag/counters")
 	
 	def get_heartbeat(self) -> Dict[str, Any]:
 		"""Check system health and connectivity."""
-		return self._get("api/v1/heartbeat")
+		return self._get("heartbeat")
 	
 	def analyze_sql(self, sql_query: str) -> Dict[str, Any]:
 		"""Analyze SQL query without execution (syntax, performance analysis)."""
-		return self._post("api/v1/sql/analyze", json_data={"sql": sql_query})
+		return self._post("sql/analyze", json_data={"sql": sql_query})
 
 	# ============================================================================
 	# HIGH-PRIORITY ADDITIONS - ENHANCED TABLE MANAGEMENT
@@ -644,7 +644,7 @@ class SSBClient:
 	
 	def list_tables_detailed(self) -> Dict[str, Any]:
 		"""Get comprehensive table information."""
-		result = self._get("api/v1/tables")
+		result = self._get("tables")
 		# Handle both list and dict responses
 		if isinstance(result, list):
 			return {"tables": result}
@@ -652,19 +652,19 @@ class SSBClient:
 	
 	def get_table_tree(self) -> Dict[str, Any]:
 		"""Get hierarchical table structure organized by catalog."""
-		return self._get("api/v1/tables/tree")
+		return self._get("tables/tree")
 	
 	def validate_data_source(self, data_source_config: Dict[str, Any]) -> Dict[str, Any]:
 		"""Validate data source configuration."""
-		return self._post("api/v1/data-sources/validate", json_data=data_source_config)
+		return self._post("data-sources/validate", json_data=data_source_config)
 	
 	def create_table_detailed(self, table_config: Dict[str, Any]) -> Dict[str, Any]:
 		"""Create table with full configuration."""
-		return self._post("api/v1/tables", json_data=table_config)
+		return self._post("tables", json_data=table_config)
 	
 	def get_table_details(self, table_id: str) -> Dict[str, Any]:
 		"""Get detailed information about a specific table."""
-		return self._get(f"api/v1/tables/{table_id}")
+		return self._get(f"tables/{table_id}")
 
 	# ============================================================================
 	# HIGH-PRIORITY ADDITIONS - CONNECTOR & FORMAT MANAGEMENT
@@ -672,7 +672,7 @@ class SSBClient:
 	
 	def list_data_formats(self) -> Dict[str, Any]:
 		"""List all available data formats."""
-		result = self._get("api/v1/ddl/data-formats")
+		result = self._get("ddl/data-formats")
 		# Handle both list and dict responses
 		if isinstance(result, list):
 			return {"dataFormats": result}
@@ -680,23 +680,23 @@ class SSBClient:
 	
 	def get_data_format_details(self, format_id: str) -> Dict[str, Any]:
 		"""Get detailed information about a specific data format."""
-		return self._get(f"api/v1/ddl/data-formats/{format_id}")
+		return self._get(f"ddl/data-formats/{format_id}")
 	
 	def create_data_format(self, format_config: Dict[str, Any]) -> Dict[str, Any]:
 		"""Create a new data format."""
-		return self._post("api/v1/ddl/data-formats", json_data=format_config)
+		return self._post("ddl/data-formats", json_data=format_config)
 	
 	def get_connector_jar(self, connector_type: str) -> Dict[str, Any]:
 		"""Get connector JAR information."""
-		return self._get(f"api/v1/ddl/connectors/jar/{connector_type}")
+		return self._get(f"ddl/connectors/jar/{connector_type}")
 	
 	def get_connector_type_details(self, connector_type: str) -> Dict[str, Any]:
 		"""Get detailed connector type information."""
-		return self._get(f"api/v1/ddl/connectors/type/{connector_type}")
+		return self._get(f"ddl/connectors/type/{connector_type}")
 	
 	def get_connector_details(self, connector_id: str) -> Dict[str, Any]:
 		"""Get detailed connector information."""
-		return self._get(f"api/v1/ddl/connectors/{connector_id}")
+		return self._get(f"ddl/connectors/{connector_id}")
 
 	# ============================================================================
 	# HIGH-PRIORITY ADDITIONS - USER & PROJECT MANAGEMENT
@@ -704,15 +704,15 @@ class SSBClient:
 	
 	def get_user_settings(self) -> Dict[str, Any]:
 		"""Get user preferences and settings."""
-		return self._get("api/v1/user/settings")
+		return self._get("user/settings")
 	
 	def update_user_settings(self, settings: Dict[str, Any]) -> Dict[str, Any]:
 		"""Update user configuration."""
-		return self._put("api/v1/user/settings", json_data=settings)
+		return self._put("user/settings", json_data=settings)
 	
 	def list_projects(self) -> Dict[str, Any]:
 		"""List available projects."""
-		result = self._get("api/v1/projects")
+		result = self._get("projects")
 		# Handle both list and dict responses
 		if isinstance(result, list):
 			return {"projects": result}
@@ -720,15 +720,15 @@ class SSBClient:
 	
 	def get_project_details(self, project_id: str) -> Dict[str, Any]:
 		"""Get project information."""
-		return self._get(f"api/v1/projects/{project_id}")
+		return self._get(f"projects/{project_id}")
 	
 	def create_project(self, project_config: Dict[str, Any]) -> Dict[str, Any]:
 		"""Create a new project."""
-		return self._post("api/v1/projects", json_data=project_config)
+		return self._post("projects", json_data=project_config)
 	
 	def get_user_info(self) -> Dict[str, Any]:
 		"""Get current user information."""
-		return self._get("api/v1/user")
+		return self._get("user")
 
 	# ============================================================================
 	# HIGH-PRIORITY ADDITIONS - API KEY MANAGEMENT
@@ -736,19 +736,19 @@ class SSBClient:
 	
 	def list_api_keys(self) -> Dict[str, Any]:
 		"""List user API keys."""
-		return self._get("api/v1/api-keys")
+		return self._get("api-keys")
 	
 	def create_api_key(self, key_config: Dict[str, Any]) -> Dict[str, Any]:
 		"""Create new API key."""
-		return self._post("api/v1/api-keys", json_data=key_config)
+		return self._post("api-keys", json_data=key_config)
 	
 	def delete_api_key(self, key_id: str) -> Dict[str, Any]:
 		"""Delete API key."""
-		return self._delete(f"api/v1/api-keys/{key_id}")
+		return self._delete(f"api-keys/{key_id}")
 	
 	def get_api_key_details(self, key_id: str) -> Dict[str, Any]:
 		"""Get API key information."""
-		return self._get(f"api/v1/api-keys/{key_id}")
+		return self._get(f"api-keys/{key_id}")
 
 	# ============================================================================
 	# HIGH-PRIORITY ADDITIONS - ENVIRONMENT MANAGEMENT
@@ -756,7 +756,7 @@ class SSBClient:
 	
 	def list_environments(self) -> Dict[str, Any]:
 		"""List available environments."""
-		result = self._get("api/v1/environments")
+		result = self._get("environments")
 		# Handle both list and dict responses
 		if isinstance(result, list):
 			return {"environments": result}
@@ -764,19 +764,19 @@ class SSBClient:
 	
 	def activate_environment(self, env_id: str) -> Dict[str, Any]:
 		"""Activate/switch to an environment."""
-		return self._post(f"api/v1/environments/{env_id}/activate")
+		return self._post(f"environments/{env_id}/activate")
 	
 	def get_environment_details(self, env_id: str) -> Dict[str, Any]:
 		"""Get environment configuration."""
-		return self._get(f"api/v1/environments/{env_id}")
+		return self._get(f"environments/{env_id}")
 	
 	def create_environment(self, env_config: Dict[str, Any]) -> Dict[str, Any]:
 		"""Create new environment."""
-		return self._post("api/v1/environments", json_data=env_config)
+		return self._post("environments", json_data=env_config)
 	
 	def deactivate_environment(self) -> Dict[str, Any]:
 		"""Deactivate current environment."""
-		return self._post("api/v1/environments/deactivate")
+		return self._post("environments/deactivate")
 
 	# ============================================================================
 	# HIGH-PRIORITY ADDITIONS - SYNC & CONFIGURATION
@@ -784,27 +784,27 @@ class SSBClient:
 	
 	def get_sync_config(self) -> Dict[str, Any]:
 		"""Get sync configuration."""
-		return self._get("api/v1/sync/config")
+		return self._get("sync/config")
 	
 	def update_sync_config(self, config: Dict[str, Any]) -> Dict[str, Any]:
 		"""Update sync configuration."""
-		return self._post("api/v1/sync/config", json_data=config)
+		return self._post("sync/config", json_data=config)
 	
 	def delete_sync_config(self) -> Dict[str, Any]:
 		"""Delete sync configuration."""
-		return self._delete("api/v1/sync/config")
+		return self._delete("sync/config")
 	
 	def validate_sync_config(self, project: str) -> Dict[str, Any]:
 		"""Validate sync configuration for a project."""
-		return self._post(f"api/v1/sync/config/validate/{project}")
+		return self._post(f"sync/config/validate/{project}")
 	
 	def export_project(self, project: str) -> Dict[str, Any]:
 		"""Export project configuration."""
-		return self._get(f"api/v1/sync/git/export/{project}")
+		return self._get(f"sync/git/export/{project}")
 	
 	def import_project(self, project: str, config: Dict[str, Any]) -> Dict[str, Any]:
 		"""Import project configuration."""
-		return self._post(f"api/v1/sync/git/import/{project}", json_data=config)
+		return self._post(f"sync/git/import/{project}", json_data=config)
 
 	# ============================================================================
 	# HIGH-PRIORITY ADDITIONS - UDF MANAGEMENT
@@ -812,7 +812,7 @@ class SSBClient:
 	
 	def list_udfs_detailed(self) -> Dict[str, Any]:
 		"""Get comprehensive UDF information."""
-		result = self._get("api/v1/udfs")
+		result = self._get("udfs")
 		# Handle both list and dict responses
 		if isinstance(result, list):
 			return {"udfs": result}
@@ -820,28 +820,28 @@ class SSBClient:
 	
 	def run_udf(self, udf_id: str, parameters: Dict[str, Any]) -> Dict[str, Any]:
 		"""Execute UDF function."""
-		return self._post("api/v1/udfs/run", json_data={"udfId": udf_id, "parameters": parameters})
+		return self._post("udfs/run", json_data={"udfId": udf_id, "parameters": parameters})
 	
 	def get_udf_artifacts(self) -> Dict[str, Any]:
 		"""Get UDF artifacts and dependencies."""
-		return self._get("api/v1/udfs/artifact")
+		return self._get("udfs/artifact")
 	
 	def create_udf(self, udf_config: Dict[str, Any]) -> Dict[str, Any]:
 		"""Create custom UDF."""
-		return self._post("api/v1/udfs", json_data=udf_config)
+		return self._post("udfs", json_data=udf_config)
 	
 	def update_udf(self, udf_id: str, udf_config: Dict[str, Any]) -> Dict[str, Any]:
 		"""Update UDF configuration."""
-		return self._put(f"api/v1/udfs/{udf_id}", json_data=udf_config)
+		return self._put(f"udfs/{udf_id}", json_data=udf_config)
 	
 	def get_udf_details(self, udf_id: str) -> Dict[str, Any]:
 		"""Get detailed UDF information."""
-		return self._get(f"api/v1/udfs/{udf_id}")
+		return self._get(f"udfs/{udf_id}")
 	
 	def get_udf_artifact_details(self, artifact_id: str) -> Dict[str, Any]:
 		"""Get UDF artifact details."""
-		return self._get(f"api/v1/udfs/artifact/{artifact_id}")
+		return self._get(f"udfs/artifact/{artifact_id}")
 	
 	def get_udf_artifact_by_type(self, artifact_type: str) -> Dict[str, Any]:
 		"""Get UDF artifacts by type."""
-		return self._get(f"api/v1/udfs/artifact/type/{artifact_type}")
+		return self._get(f"udfs/artifact/type/{artifact_type}")
