@@ -341,6 +341,16 @@ Once configured, you can ask Claude questions like:
 - "Get materialized view endpoints for job 1234"
 - "Create a materialized view endpoint for job 1234"
 
+### Materialized Views
+- "Get materialized view endpoints for job 1234"
+- "Create a materialized view endpoint for job 1234"
+
+**⚠️ Important Limitation**: Materialized Views (MVs) must be created through the SSB UI interface. The MCP server can retrieve data from existing materialized views but cannot create new ones programmatically. To create a materialized view:
+1. Navigate to your job in the SSB UI
+2. Go to the Materialized Views section
+3. Configure and create the MV through the UI
+4. Use the MCP server to query the created MV data
+
 ### Monitoring & Diagnostics
 - "Check the system heartbeat and health"
 - "Show me the diagnostic counters"
