@@ -351,6 +351,99 @@ Once configured, you can ask Claude questions like:
 3. Configure and create the MV through the UI
 4. Use the MCP server to query the created MV data
 
+## ⚠️ Known Limitations
+
+### Job Restart Capabilities
+**Limited Restart Functionality**: The SSB API provides limited job restart capabilities:
+
+**✅ What Works:**
+- `stop_job(job_id, savepoint=True)` - Stops jobs with savepoints
+- `restart_job_with_sampling(job_id, sql_query, ...)` - Creates new jobs with updated SQL
+- `PUT /jobs/{id}` - Updates job configuration
+
+**❌ What Doesn't Work:**
+- Direct job restart via dedicated restart endpoints
+- `start_stream(stream_name)` - Stream start endpoints return 404
+- `stop_stream(stream_name)` - Stream stop endpoints return 404
+- `execute_job(job_id, sql_query)` - Database connection issues
+
+**Recommended Restart Strategy:**
+```python
+# For restarting a job with new SQL
+def restart_siem_job(job_id, new_sql):
+    try:
+        # Stop the existing job
+        client.stop_job(job_id, savepoint=True)
+        
+        # Create new job with updated SQL
+        result = client.restart_job_with_sampling(job_id, new_sql)
+        return result
+    except Exception as e:
+        print(f"Restart failed: {e}")
+```
+
+### Virtual Tables and System Catalogs
+**Limited Table Discovery**: The SSB environment has limited traditional table support:
+
+**✅ What's Available:**
+- **System Catalogs**: 2 catalogs (`default_catalog`, `ssb`)
+- **Functions**: 206 built-in functions for data processing
+- **Materialized Views**: Accessible via MVE API (not SQL)
+
+**❌ What's Not Available:**
+- Traditional database tables (SHOW TABLES returns empty)
+- Standard information_schema queries
+- Direct SQL access to materialized views
+- System tables for metadata discovery
+
+**Data Access Methods:**
+- **Direct SQL**: Limited to functions and basic queries
+- **MVE API**: For materialized view data (requires Basic Auth)
+- **Job Execution**: For creating and managing data streams
+
+### Authentication and Configuration
+**Configuration Loading**: The MCP server loads configuration from environment variables, not JSON files:
+
+**⚠️ Important**: When updating `config/cloud_ssb_config.json`, you must also update the corresponding environment variables:
+```bash
+export KNOX_GATEWAY_URL="your_gateway_url"
+export KNOX_TOKEN="your_jwt_token"
+export SSB_API_BASE="your_api_base"
+```
+
+**Token Expiration**: JWT tokens expire and require manual refresh. The MCP server doesn't automatically refresh tokens.
+
+### Cloud Environment Limitations
+**Endpoint Availability**: Some endpoints may not be available in cloud environments:
+
+**❌ Cloud Limitations:**
+- `list_projects()` - May return "Request method 'GET' not supported"
+- `get_heartbeat()` - May return empty responses
+- `create_stream()` and `execute_query()` - May timeout with 500 errors
+- `SHOW JOBS` - Not supported in cloud environment
+
+**✅ Workarounds:**
+- Use `list_streams()` instead of `list_projects()`
+- Skip heartbeat checks in cloud environments
+- Handle timeouts gracefully with retry logic
+- Use job management tools instead of SHOW commands
+
+### Materialized View Engine (MVE) API
+**Separate Authentication**: MVE API requires different authentication than the main SSB API:
+
+**Authentication Requirements:**
+- **SSB API**: Bearer token authentication
+- **MVE API**: Basic authentication (username:password)
+- **Credentials**: Must be provided separately for MVE access
+
+**Access Pattern:**
+```python
+# MVE API access requires Basic Auth
+credentials = 'username:password'
+encoded_credentials = base64.b64encode(credentials.encode()).decode()
+headers = {'Authorization': f'Basic {encoded_credentials}'}
+```
+
 ### Monitoring & Diagnostics
 - "Check the system heartbeat and health"
 - "Show me the diagnostic counters"
@@ -714,6 +807,7 @@ cd Testing && python run_tests.py --quick
    - Use `restart_job_with_sampling()` instead of `execute_job()`
    - Check if the job is in a state that allows restarting
    - Create a new job if restart is not possible
+   - Note: `start_stream()` and `stop_stream()` methods don't work (404 errors)
 
 5. **SSL certificate errors**: For Knox deployments
    - Set `KNOX_VERIFY_SSL=false` for self-signed certificates
@@ -730,6 +824,23 @@ cd Testing && python run_tests.py --quick
    - Data sources need to be manually registered in the Flink catalog through the SSB UI
    - Use `SHOW TABLES;` to see which tables are actually available for querying
    - Only tables that appear in `SHOW TABLES;` can be queried via SQL
+
+8. **Configuration not updating**: After updating `config/cloud_ssb_config.json`
+   - **Important**: The MCP server loads from environment variables, not JSON files
+   - Update environment variables: `export KNOX_TOKEN="new_token"`
+   - Restart the MCP server after updating environment variables
+
+9. **Materialized View access errors**: When accessing MVE API
+   - MVE API requires Basic authentication (username:password)
+   - SSB API uses Bearer token authentication
+   - Use different credentials for MVE API access
+   - Check that the job is running before accessing its MV
+
+10. **Empty table lists**: When running `SHOW TABLES`
+    - SSB environment has limited traditional table support
+    - Use `list_streams()` to see available jobs
+    - Access materialized views via MVE API, not SQL
+    - Focus on job-based data processing rather than table queries
 
 ### Debug Mode
 Enable debug logging by setting environment variable:
